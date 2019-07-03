@@ -53,7 +53,11 @@ spec:
           - |
             set -ex
             cp /configmap/* /etc/rabbitmq
+            {{- if .Values.rabbitmqErlangCookie }}
+            echo {{ .Values.rabbitmqErlangCookie }} > /var/lib/rabbitmq/.erlang.cookie
+            {{- else }}
             rm -f /var/lib/rabbitmq/.erlang.cookie
+            {{- end }}
             {{- if and .Values.securityContext .Values.securityContext.runAsUser .Values.securityContext.fsGroup }}
             chown {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.fsGroup }} /var/lib/rabbitmq
             {{- end }}
